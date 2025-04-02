@@ -1,5 +1,15 @@
 # Tic-Tac-Toe Game in Pharo (Cormas)
 
+## 📸 Screenshots
+### **1️⃣ Game Start**
+![Game Start](tictactoe1.png)
+
+### **2️⃣ Player Moves**
+![Player Moves](tictactoe2.png)
+
+### **3️⃣ Win Screen**
+![Win Screen](tictactoe3.png)
+
 ## 📌 Project Overview
 This is a simple **Tic-Tac-Toe** game built in **Pharo 12** with **Cormas**. The game follows the classic 3x3 grid format, allowing two players to play alternately. The project includes:
 
@@ -40,15 +50,6 @@ This is a simple **Tic-Tac-Toe** game built in **Pharo 12** with **Cormas**. The
 3. The game will detect a **win** or **draw** and display a message.
 4. Restart the game manually if needed.
 
-## 📸 Screenshots
-### **1️⃣ Game Start**
-![Game Start](tictactoe1.png)
-
-### **2️⃣ Player Moves**
-![Player Moves](tictactoe2.png)
-
-### **3️⃣ Win Screen**
-![Win Screen](tictactoe3.png)
 
 ## 📂 Project Structure
 ```
