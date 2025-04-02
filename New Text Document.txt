@@ -1,0 +1,179 @@
+Below is a high-level, step-by-step outline of the project structure and classes for an interactive Tic Tac Toe game in Pharo. No code is provided at this stage—just a clear breakdown of each component and how they fit together. You can follow these prompts as a checklist to build the project.
+
+---
+
+### **Step 1: Create a New Model**
+
+- **Model Name:** TicTacToeGame  
+- **Prefix (suggested):** TTT  
+- **Structure:**  
+  - Package: `TicTacToeGame-Model`  
+  - Main model class (e.g., `TTTModel`)
+
+---
+
+### **Step 2: Define the Core Data Classes**
+
+#### **2.1. TTTCell Class**
+
+- **Purpose:** Represents a single cell on the Tic Tac Toe board.
+- **Instance Variables:**  
+  - `state` — Indicates the current marker in the cell (e.g., `#empty`, `#X`, or `#O`).
+- **Responsibilities:**  
+  - Hold and update its state.
+  - Provide access to its state (getters/setters).
+
+#### **2.2. TTTBoard Class**
+
+- **Purpose:** Represents the Tic Tac Toe board and manages game logic.
+- **Instance Variables:**  
+  - `cells` — A collection (e.g., an array or ordered collection) holding 9 `TTTCell` instances.
+  - `currentPlayer` — Tracks whose turn it is (e.g., `#X` or `#O`).
+- **Responsibilities:**  
+  - Initialize the board by creating 9 cells.
+  - Manage cell marking logic (i.e., a method to mark a cell when a player makes a move).
+  - Switch the current player after each move.
+  - Check win/draw conditions and announce a win or reset the game as needed.
+  
+---
+
+### **Step 3: Define the Model Class**
+
+#### **TTTModel Class**
+
+- **Purpose:** Acts as the overall simulation/model container.
+- **Instance Variables:**  
+  - `board` — An instance of `TTTBoard`.
+- **Responsibilities:**  
+  - Initialize the model and create the game board.
+  - Create the grid (if using a simulation framework like Cormas) and link grid cells with board cells.
+  - Provide an entry point (e.g., an `openGameUI` method) to launch the interactive game.
+
+---
+
+### **Step 4: Define the User Interface (UI) Classes Using Morphic**
+
+#### **4.1. TTTCellMorph Class**
+
+- **Purpose:** A UI component representing an individual cell on the board.
+- **Instance Variables:**  
+  - `modelCell` — The corresponding `TTTCell` from the game model.
+- **Responsibilities:**  
+  - Render the cell’s current state (empty, X, or O).
+  - Handle user interaction (e.g., mouse click) and forward the event to update the model.
+
+#### **4.2. TTTBoardMorph Class**
+
+- **Purpose:** A UI container for the Tic Tac Toe board.
+- **Instance Variables:**  
+  - `board` — The instance of `TTTBoard` that this UI represents.
+- **Responsibilities:**  
+  - Arrange and display nine `TTTCellMorph` instances in a 3×3 grid.
+  - Serve as the main interactive UI for the game.
+  - Handle high-level UI events (like a reset or showing the current player's turn).
+
+---
+
+### **Step 5: Define Integration Points and Workflow**
+
+1. **Model Initialization:**
+   - `TTTModel` creates an instance of `TTTBoard`.
+   - `TTTBoard` initializes its 9 cells and sets the starting player.
+2. **Grid Creation (if using Cormas simulation):**
+   - `TTTModel` creates a grid with 3 rows and 3 columns.
+   - Each grid cell is linked to a corresponding `TTTCell` from the `TTTBoard` instance.
+3. **User Interface Launch:**
+   - A method (e.g., `openGameUI` in `TTTModel`) instantiates `TTTBoardMorph` and sets it up with the `TTTBoard`.
+   - The UI morph is then opened in the Pharo world for user interaction.
+4. **User Interaction Flow:**
+   - When a user clicks a cell (handled in `TTTCellMorph`), the event is sent to the board to mark that cell.
+   - After marking, the board switches the player and checks win conditions.
+   - The UI updates to reflect the new state (cell markers, current player, etc.).
+
+---
+
+### **Step 6: Plan for Future Enhancements**
+
+- **Win Conditions:**  
+  - Define clear logic in `TTTBoard` to check rows, columns, and diagonals for a win or draw.
+  - Provide visual feedback or a pop-up to announce the game result.
+  
+- **UI Improvements:**  
+  - Display current player information.
+  - Add a reset or new game button.
+  - Improve cell rendering with colors or animations.
+
+- **Error Handling:**  
+  - Ensure the UI gracefully handles invalid moves (e.g., clicking an already marked cell).
+  - Maintain consistency between model and UI state.
+
+---
+TicTacToeGame/
+├── README.md                          # Project overview and instructions.
+├── TicTacToeGame-Model/               # Package for model classes.
+│   ├── TTTModel.st                    # Main model class for the simulation.
+│   │   ├── Instance Variable: board   # Holds an instance of TTTBoard.
+│   │   ├── Methods:
+│   │   │     - initialize  
+│   │   │           • Calls super initialize.  
+│   │   │           • Creates a new TTTBoard instance and assigns it to board.
+│   │   │     - board  
+│   │   │           • Getter method returning board.
+│   │   │     - init  
+│   │   │           • Creates a grid (3×3) if using Cormas, and for each grid cell, sets its model entity to the corresponding cell from board.
+│   │   │     - openGameUI  
+│   │   │           • Instantiates TTTBoardMorph, passes it the board, and opens the UI.
+│   │
+│   ├── TTTBoard.st                    # Class representing the Tic Tac Toe board and game logic.
+│   │   ├── Instance Variables: cells, currentPlayer  
+│   │   ├── Methods:
+│   │   │     - initialize  
+│   │   │           • Initializes cells (a collection of 9 TTTCell instances, each set to an empty state).  
+│   │   │           • Sets the initial currentPlayer (e.g., #X).
+│   │   │     - cells  
+│   │   │           • Getter method for the cells collection.
+│   │   │     - markCell: aCell  
+│   │   │           • Checks if aCell is empty. If so, marks it with currentPlayer, then calls switchPlayer and checkWinConditions.
+│   │   │     - switchPlayer  
+│   │   │           • Toggles currentPlayer between #X and #O.
+│   │   │     - checkWinConditions  
+│   │   │           • Scans rows, columns, and diagonals to detect a win or draw.
+│   │   │     - announceWin: aMarker  
+│   │   │           • Announces the winning marker (e.g., by printing to the Transcript or showing a UI alert).
+│   │
+│   ├── TTTCell.st                     # Class representing a single cell on the board.
+│   │   ├── Instance Variable: state   # Holds the current marker (e.g., #empty, #X, or #O).
+│   │   ├── Methods:
+│   │   │     - initialize  
+│   │   │           • Sets state to #empty.
+│   │   │     - state  
+│   │   │           • Getter for state.
+│   │   │     - state: aSymbol  
+│   │   │           • Setter to update the cell's state.
+│
+├── UI/                                # Package for the UI (Morphic) classes.
+│   ├── TTTBoardMorph.st               # Morph for displaying the Tic Tac Toe board.
+│   │   ├── Instance Variable: board   # Holds the TTTBoard model instance.
+│   │   ├── Methods:
+│   │   │     - initializeWithBoard: aBoard  
+│   │   │           • Assigns the passed board to the instance variable.  
+│   │   │           • Sets the overall size (extent) for the board morph.
+│   │   │           • Calls buildBoard to create cell morphs.
+│   │   │     - buildBoard  
+│   │   │           • Loops through 3 rows and 3 columns.
+│   │   │           • For each grid position, creates a TTTCellMorph, assigns the corresponding model cell from board, sets position/size, and adds it as a submorph.
+│   │
+│   ├── TTTCellMorph.st                # Morph for displaying an individual board cell.
+│   │   ├── Instance Variable: modelCell   # Reference to the corresponding TTTCell from the model.
+│   │   ├── Methods:
+│   │   │     - modelCell: aCell  
+│   │   │           • Assigns aCell to modelCell and refreshes the morph display.
+│   │   │     - drawOn: aCanvas  
+│   │   │           • Draws the cell’s content (e.g., if modelCell's state is not #empty, draw the marker using a specific color).
+│   │   │     - mouseUp: anEvent  
+│   │   │           • Handles a mouse click event.  
+│   │   │           • Sends the markCell: message to the board (through a method like TTTModel current board or another global reference) using modelCell.
+│   │   │           • Refreshes the morph display.
+│
+└── Documentation/
+    └── README.md                    # Additional project documentation and instructions.
